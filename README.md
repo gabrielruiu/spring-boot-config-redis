@@ -1,0 +1,1 @@
+just a "playground" project to determine how to configure the spring cloud server environment to retrieve properties from redis, instead of git
