@@ -15,8 +15,6 @@ import java.util.UUID;
 @Component
 public class RedisEnvironmentRepository implements EnvironmentRepository {
 
-    private static final String KEY = "config";
-
     @Autowired
     private StringRedisTemplate redisTemplate;
 
