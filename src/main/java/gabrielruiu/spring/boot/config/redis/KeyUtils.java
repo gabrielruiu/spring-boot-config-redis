@@ -5,8 +5,10 @@ package gabrielruiu.spring.boot.config.redis;
  */
 class KeyUtils {
 
+    public static final String GLOBAL_APPLICATION_KEY = "application";
+
     static String globalPropertyKeys(String profile) {
-        return applicationProperties("application", profile);
+        return applicationProperties(GLOBAL_APPLICATION_KEY, profile);
     }
 
     static String applicationProperties(String application, String profile) {
