@@ -16,14 +16,15 @@ public class RedisValuesToEnvironmentConverter {
         Environment environment = new Environment(application, StringUtils.commaDelimitedListToStringArray(profiles));
         environment.setLabel(label);
         environment.setVersion("unset");
-        environment.
+        convert(environment, new HashMap<>());
+        return environment;
     }
 
     private void convert(Environment environment, Map<String, Set<String>> values) {
         for (Map.Entry<String, Set<String>> propertyValueMap : values.entrySet()) {
             Map<String, String> applicationProperties = new HashMap<>();
             for (String propertyValue : propertyValueMap.getValue()) {
-                applicationProperties.put(String.format("%s.%s", propertyValueMap.getKey(), propertyValue));
+//                applicationProperties.put(String.format("%s.%s", propertyValueMap.getKey(), propertyValue));
             }
         }
     }
