@@ -34,6 +34,20 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
         }
         if (profileArray == null) {
             profileArray = configServerProperties.getDefaultProfile();
+        } else {
+            String[] profiles = profileArray.split(",");
+            if (profiles.length > 0) {
+                boolean defaultProfileFound = false;
+                for (String profile : profiles) {
+                    if (profile.equals(configServerProperties.getDefaultProfile())) {
+                        defaultProfileFound = true;
+                        break;
+                    }
+                }
+                if (!defaultProfileFound) {
+                    profileArray = profileArray + "," + configServerProperties.getDefaultProfile();
+                }
+            }
         }
         if (application == null) {
             application = configServerProperties.getDefaultApplicationName();
