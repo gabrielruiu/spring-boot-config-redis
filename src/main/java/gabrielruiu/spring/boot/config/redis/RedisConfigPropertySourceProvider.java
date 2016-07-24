@@ -29,11 +29,16 @@ public class RedisConfigPropertySourceProvider {
 
             Map<String, String> properties = new HashMap<>();
             for (int i=0; i<keys.size(); i++) {
-                properties.put(KeyUtils.extractPropertyNameNameFromKey(application, profile, label, keys.get(i)),
-                        propertyValues.get(i));
+                properties.put(formatKey(application, profile, label, keys.get(i)),
+                               propertyValues.get(i));
             }
             return new PropertySource(application, properties);
         }
         return null;
+    }
+
+    private String formatKey(String application, String profile, String label, String key) {
+        String extractedPropertyName = KeyUtils.extractPropertyNameNameFromKey(application, profile, label, key);
+        return extractedPropertyName.replace(":", ".");
     }
 }
