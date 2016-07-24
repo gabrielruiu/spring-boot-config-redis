@@ -24,37 +24,13 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
     private ConfigServerProperties configServerProperties;
 
     @Override
-    public Environment findOne(String application, String profileArray, String label) {
-        if (label == null) {
-            if (configServerProperties.getDefaultLabel() != null) {
-                label = configServerProperties.getDefaultLabel();
-            } else {
-                label = DEFAULT_LABEL;
-            }
-        }
-        if (profileArray == null) {
-            profileArray = configServerProperties.getDefaultProfile();
-        } else {
-            String[] profiles = profileArray.split(",");
-            if (profiles.length > 0) {
-                boolean defaultProfileFound = false;
-                for (String profile : profiles) {
-                    if (profile.equals(configServerProperties.getDefaultProfile())) {
-                        defaultProfileFound = true;
-                        break;
-                    }
-                }
-                if (!defaultProfileFound) {
-                    profileArray = profileArray + "," + configServerProperties.getDefaultProfile();
-                }
-            }
-        }
-        if (application == null) {
-            application = configServerProperties.getDefaultApplicationName();
-        }
+    public Environment findOne(String application, String inputProfileArray, String label) {
+        application = getDefaultApplication(application);
+        label = getDefaultLabel(label);
+        String profileArray = getDefaultProfilesArray(inputProfileArray);
 
         String[] profiles = profileArray.split(",");
-        Environment environment = new Environment(application, profiles);
+        Environment environment = new Environment(application, inputProfileArray.split(","));
 
         for (String profile : profiles) {
 
@@ -73,5 +49,43 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
         }
 
         return environment;
+    }
+
+    private String getDefaultLabel(String label) {
+        if (label == null) {
+            if (configServerProperties.getDefaultLabel() != null) {
+                return configServerProperties.getDefaultLabel();
+            } else {
+                return DEFAULT_LABEL;
+            }
+        }
+        return label;
+    }
+
+    private String getDefaultApplication(String application) {
+        if (application == null) {
+            return configServerProperties.getDefaultApplicationName();
+        }
+        return application;
+    }
+
+    private String getDefaultProfilesArray(String profileArray) {
+        if (profileArray == null) {
+            return configServerProperties.getDefaultProfile();
+        } else {
+            String[] profiles = profileArray.split(",");
+
+            boolean defaultProfileFound = false;
+            for (String profile : profiles) {
+                if (profile.equals(configServerProperties.getDefaultProfile())) {
+                    defaultProfileFound = true;
+                    break;
+                }
+            }
+            if (!defaultProfileFound) {
+                return profileArray + "," + configServerProperties.getDefaultProfile();
+            }
+            return profileArray;
+        }
     }
 }
