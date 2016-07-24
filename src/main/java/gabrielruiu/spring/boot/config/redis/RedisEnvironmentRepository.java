@@ -7,6 +7,8 @@ import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.cloud.config.server.environment.EnvironmentRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
@@ -48,10 +50,11 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
                 environment.add(globalPropertySource);
             }
 
-
-            PropertySource applicationPropertySource = redisConfigPropertySourceProvider.getPropertySource(application, profile, label);
-            if (applicationPropertySource != null) {
-                environment.add(applicationPropertySource);
+            if (!Objects.equals(application, configServerProperties.getDefaultApplicationName())) {
+                PropertySource applicationPropertySource = redisConfigPropertySourceProvider.getPropertySource(application, profile, label);
+                if (applicationPropertySource != null) {
+                    environment.add(applicationPropertySource);
+                }
             }
         }
 
