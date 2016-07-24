@@ -2,13 +2,11 @@ package gabrielruiu.spring.boot.config.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.config.environment.PropertySource;
+import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
@@ -22,6 +20,9 @@ public class RedisConfigPropertySourceProvider {
     @Autowired
     private RedisConfigKeysProvider redisConfigKeysProvider;
 
+    @Autowired
+    private ConfigServerProperties configServerProperties;
+
     public PropertySource getPropertySource(String application, String profile, String label) {
         List<String> keys = new ArrayList<>(redisConfigKeysProvider.getKeys(application, profile, label));
         if (keys.size() > 0) {
@@ -32,7 +33,7 @@ public class RedisConfigPropertySourceProvider {
                 properties.put(formatKey(application, profile, label, keys.get(i)),
                                propertyValues.get(i));
             }
-            return new PropertySource(application, properties);
+            return new PropertySource(getPropertySourceName(application, profile), properties);
         }
         return null;
     }
@@ -40,5 +41,12 @@ public class RedisConfigPropertySourceProvider {
     private String formatKey(String application, String profile, String label, String key) {
         String extractedPropertyName = KeyUtils.extractPropertyNameNameFromKey(application, profile, label, key);
         return extractedPropertyName.replace(":", ".");
+    }
+
+    private String getPropertySourceName(String application, String profile) {
+        if (!Objects.equals(profile, configServerProperties.getDefaultProfile())) {
+            return application + "-" + profile;
+        }
+        return application;
     }
 }
