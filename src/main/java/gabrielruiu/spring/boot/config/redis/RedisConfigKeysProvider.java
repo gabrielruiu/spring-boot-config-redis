@@ -20,7 +20,7 @@ public class RedisConfigKeysProvider {
     public Set<String> getKeys(String application, String profiles, String label) {
         Set<String> applicationKeys = new HashSet<>();
         for (String profile : StringUtils.commaDelimitedListToSet(profiles)) {
-            applicationKeys.addAll(stringRedisTemplate.keys(KeyUtils.applicationProperties(application, profile, label)));
+            applicationKeys.addAll(stringRedisTemplate.keys(KeyUtils.redisConfigKeyTemplate(application, profile, label)));
         }
         return applicationKeys;
     }
