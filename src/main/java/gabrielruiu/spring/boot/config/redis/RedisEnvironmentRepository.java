@@ -17,11 +17,14 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
 
     private static final String DEFAULT_LABEL = "master";
 
-    @Autowired
     private RedisConfigPropertySourceProvider redisConfigPropertySourceProvider;
+    private ConfigServerProperties configServerProperties;
 
     @Autowired
-    private ConfigServerProperties configServerProperties;
+    public RedisEnvironmentRepository(RedisConfigPropertySourceProvider redisConfigPropertySourceProvider, ConfigServerProperties configServerProperties) {
+        this.redisConfigPropertySourceProvider = redisConfigPropertySourceProvider;
+        this.configServerProperties = configServerProperties;
+    }
 
     @Override
     public Environment findOne(String application, String inputProfileArray, String label) {

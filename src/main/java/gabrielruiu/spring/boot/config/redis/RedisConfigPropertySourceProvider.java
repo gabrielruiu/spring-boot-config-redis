@@ -14,14 +14,16 @@ import java.util.*;
 @Component
 public class RedisConfigPropertySourceProvider {
 
-    @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
     private RedisConfigKeysProvider redisConfigKeysProvider;
+    private ConfigServerProperties configServerProperties;
 
     @Autowired
-    private ConfigServerProperties configServerProperties;
+    public RedisConfigPropertySourceProvider(StringRedisTemplate stringRedisTemplate, RedisConfigKeysProvider redisConfigKeysProvider, ConfigServerProperties configServerProperties) {
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.redisConfigKeysProvider = redisConfigKeysProvider;
+        this.configServerProperties = configServerProperties;
+    }
 
     public PropertySource getPropertySource(String application, String profile, String label) {
         List<String> keys = new ArrayList<>(redisConfigKeysProvider.getKeys(application, profile, label));

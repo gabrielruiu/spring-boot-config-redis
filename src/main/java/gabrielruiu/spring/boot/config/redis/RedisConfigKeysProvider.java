@@ -14,8 +14,12 @@ import java.util.Set;
 @Component
 public class RedisConfigKeysProvider {
 
-    @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    public RedisConfigKeysProvider(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     public Set<String> getKeys(String application, String profiles, String label) {
         Set<String> applicationKeys = new HashSet<>();
