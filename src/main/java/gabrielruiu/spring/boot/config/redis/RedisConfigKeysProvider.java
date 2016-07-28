@@ -15,16 +15,18 @@ import java.util.Set;
 public class RedisConfigKeysProvider {
 
     private StringRedisTemplate stringRedisTemplate;
+    private RedisConfigKeysUtilities redisConfigKeysUtilities;
 
     @Autowired
-    public RedisConfigKeysProvider(StringRedisTemplate stringRedisTemplate) {
+    public RedisConfigKeysProvider(StringRedisTemplate stringRedisTemplate, RedisConfigKeysUtilities redisConfigKeysUtilities) {
         this.stringRedisTemplate = stringRedisTemplate;
+        this.redisConfigKeysUtilities = redisConfigKeysUtilities;
     }
 
     public Set<String> getKeys(String application, String profiles, String label) {
         Set<String> applicationKeys = new HashSet<>();
         for (String profile : StringUtils.commaDelimitedListToSet(profiles)) {
-            applicationKeys.addAll(stringRedisTemplate.keys(KeyUtils.redisConfigKeyTemplate(application, profile, label)));
+            applicationKeys.addAll(stringRedisTemplate.keys(redisConfigKeysUtilities.redisConfigKeyTemplate(application, profile, label)));
         }
         return applicationKeys;
     }

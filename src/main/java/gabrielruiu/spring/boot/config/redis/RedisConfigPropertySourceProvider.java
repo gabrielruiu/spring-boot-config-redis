@@ -16,12 +16,14 @@ public class RedisConfigPropertySourceProvider {
 
     private StringRedisTemplate stringRedisTemplate;
     private RedisConfigKeysProvider redisConfigKeysProvider;
+    private RedisConfigKeysUtilities redisConfigKeysUtilities;
     private ConfigServerProperties configServerProperties;
 
     @Autowired
-    public RedisConfigPropertySourceProvider(StringRedisTemplate stringRedisTemplate, RedisConfigKeysProvider redisConfigKeysProvider, ConfigServerProperties configServerProperties) {
+    public RedisConfigPropertySourceProvider(StringRedisTemplate stringRedisTemplate, RedisConfigKeysProvider redisConfigKeysProvider, RedisConfigKeysUtilities redisConfigKeysUtilities, ConfigServerProperties configServerProperties) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.redisConfigKeysProvider = redisConfigKeysProvider;
+        this.redisConfigKeysUtilities = redisConfigKeysUtilities;
         this.configServerProperties = configServerProperties;
     }
 
@@ -41,7 +43,7 @@ public class RedisConfigPropertySourceProvider {
     }
 
     private String formatKey(String application, String profile, String label, String key) {
-        String extractedPropertyName = KeyUtils.extractPropertyNameNameFromKey(application, profile, label, key);
+        String extractedPropertyName = redisConfigKeysUtilities.extractPropertyNameNameFromKey(application, profile, label, key);
         return extractedPropertyName.replace(":", ".");
     }
 
